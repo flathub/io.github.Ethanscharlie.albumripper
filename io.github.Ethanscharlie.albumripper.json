@@ -1,7 +1,7 @@
 {
     "id" : "io.github.Ethanscharlie.albumripper",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "48",
+    "runtime-version" : "50",
     "sdk" : "org.gnome.Sdk",
     "command" : "albumripper",
     "finish-args" : [
@@ -15,26 +15,58 @@
     ],
     "cleanup" : [
         "/include",
-        "/lib/pkgconfig",
-        "/man",
+        "/share/bash-completion",
         "/share/doc",
-        "/share/gtk-doc",
+        "/share/fish",
         "/share/man",
-        "/share/pkgconfig",
-        "*.la",
-        "*.a"
+        "/share/zsh"
+    ],
+    "cleanup-commands": [
+        "python3 -m compileall --invalidation-mode=unchecked-hash /app"
     ],
     "modules" : [
         "python3-requests.json",
         {
+            "name": "quickjs",
+            "buildsystem": "simple",
+            "build-commands": [
+                "make",
+                "make install PREFIX=/app"
+            ],
+            "cleanup": [
+                "/bin/qjsc"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://bellard.org/quickjs/quickjs-2025-09-13-2.tar.xz",
+                    "sha256": "996c6b5018fc955ad4d06426d0e9cb713685a00c825aa5c0418bd53f7df8b0b4",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 138263,
+                        "stable-only": true,
+                        "url-template": "https://bellard.org/quickjs/quickjs-$version.tar.xz"
+                    }
+                }
+            ]
+        },
+        {
             "name" : "albumripper",
             "builddir" : true,
             "buildsystem" : "meson",
-            "sources" : [{
-                "type" : "git",
-                "url" : "https://github.com/Ethanscharlie/albumripper.git",
-                "tag": "v1.2.1"
-            }]
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://github.com/Ethanscharlie/albumripper.git",
+                    "tag": "v1.2.1",
+                    "commit": "885ddef565121ec1f7c6e62569f022dc7e3d56e7",
+                    "x-checker-data": {
+                        "is-main-source": true,
+                        "type": "git",
+                        "tag-pattern": "^v([\\d.]+)$"
+                    }
+                }
+            ]
         }
     ]
 }
